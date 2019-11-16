@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+{% load leaflet_tags %}
+{% load static %}
+    <head>
+        <style media="screen">
+     #gis { width:100%; height:200% }
+   </style>
+        {% leaflet_js %}
+        {% leaflet_css %}
+        <script src="{% static 'county/js/leaflet.ajax.js' %}"></script>
+        <script src="{% static 'county/js/leaflet.spin.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    </head>
+    <body>
+    {% leaflet_map "main" callback="main_map_init" %}
+
+            <script type="text/javascript">
+                function main_map_init (map, options) {
+                    var dataurl = '{% url "county:county" %}';
+            // Download GeoJSON via Ajax
+            $.getJSON(dataurl, function (data) {
+                // Add GeoJSON layer
+                L.geoJson(data,{
+                    onEachFeature: function (feature, layer) {
+                        layer.bindPopup("<b><u>Details</u></b>"+
+                                "<p><b>Name:</b> "+feature.properties.county+"</p>"+
+                                "<p><b>Population:</b> "+feature.properties.county_pop+"</p>");
+                        }
+                    }).addTo(map);
+            });
+                }
+            </script>
+
+
+    </body>
+</html>

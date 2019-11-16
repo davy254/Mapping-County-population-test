@@ -11,6 +11,7 @@ class County(models.Model):
     shape_leng = models.FloatField()
     shape_area = models.FloatField()
     geom = models.MultiPolygonField(srid=4326)
+    county_pop= models.IntegerField(default=0)
 
     def __str__(self):
         return self.county

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse , HttpResponse
 from django.core.serializers import serialize
 from .models import County
 from django.views.generic import  TemplateView
@@ -13,14 +13,13 @@ from django.core.cache import cache
 
 
 def county_view(request):
-    redis_key = 'county'
-    county = cache.get(redis_key)  # getting value for given key from redis
-    if not county:
-
-        county = serialize('geojson', County.objects.all())
-        cache.set(redis_key, county)  # if not GeoJSON is not in cache set it
-    return JsonResponse(json.loads(county))
+    counties = serialize('geojson', County.objects.all())
+    #return HttpResponse(counties, content_type='application/json')
+    return JsonResponse(json.loads(counties))
 
 
 class MainPageView(TemplateView):
     template_name = 'county/main.html'
+
+class Map1PageView(TemplateView):
+    template_name = 'county/map1.html'
